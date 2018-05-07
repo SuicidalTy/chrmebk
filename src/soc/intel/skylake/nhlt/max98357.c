@@ -27,6 +27,16 @@ static const struct nhlt_format_config max98357_render_formats[] = {
 	},
 };
 
+static struct nhlt_feedback_config render_config = {
+	.tdm_config = {
+		.virtual_slot = 0x0,
+		.config_type = NHLT_TDM_RENDER_FEEDBACK,
+	},
+	.feedback_virtual_slot = 2,
+	.feedback_channels = 4,
+	.feedback_valid_bits_per_sample = 16,
+};
+
 static const struct nhlt_endp_descriptor max98357_descriptors[] = {
 	{
 		.link = NHLT_LINK_SSP,
@@ -34,6 +44,8 @@ static const struct nhlt_endp_descriptor max98357_descriptors[] = {
 		.direction = NHLT_DIR_RENDER,
 		.vid = NHLT_VID,
 		.did = NHLT_DID_SSP,
+		.cfg = &render_config,
+		.cfg_size = sizeof(render_config),
 		.formats = max98357_render_formats,
 		.num_formats = ARRAY_SIZE(max98357_render_formats),
 	},
