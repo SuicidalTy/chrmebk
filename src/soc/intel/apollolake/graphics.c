@@ -26,7 +26,10 @@
 #include <intelblocks/graphics.h>
 #include <drivers/intel/gma/opregion.h>
 #include <drivers/intel/gma/libgfxinit.h>
+#include <soc/i915.h>
+#include <soc/pci_devs.h>
 #include <types.h>
+#include "chip.h"
 
 uintptr_t fsp_soc_get_igd_bar(void)
 {
@@ -69,4 +72,25 @@ uintptr_t graphics_soc_write_acpi_opregion(struct device *device,
 
 	current += sizeof(igd_opregion_t);
 	return acpi_align_current(current);
+}
+
+struct i915_gpu_controller_info *
+intel_igd_get_controller_info(void)
+{
+	struct device *dev = pcidev_on_root(SA_DEV_SLOT_IGD, 0);
+	if (!dev)
+		return NULL;
+
+	struct soc_intel_apollolake_config *chip = dev->chip_info;
+	return &chip->gfx;
+}
+
+void gma_ssdt(struct device *dev)
+{
+	struct i915_gpu_controller_info *gfx = intel_igd_get_controller_info();
+
+	if (!gfx)
+		return;
+
+	intel_igd_displays_ssdt_generate(gfx);
 }

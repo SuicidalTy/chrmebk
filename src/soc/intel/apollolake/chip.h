@@ -27,6 +27,7 @@
 #include <intelblocks/lpc_lib.h>
 #include <device/i2c_simple.h>
 #include <drivers/i2c/designware/dw_i2c.h>
+#include <soc/i915.h>
 #include <soc/pm.h>
 #include <soc/usb.h>
 
@@ -182,6 +183,8 @@ struct soc_intel_apollolake_config {
 	 * the Upd parameter VtdEnable.
 	 */
 	uint8_t enable_vtd;
+
+	struct i915_gpu_controller_info gfx;
 };
 
 typedef struct soc_intel_apollolake_config config_t;
